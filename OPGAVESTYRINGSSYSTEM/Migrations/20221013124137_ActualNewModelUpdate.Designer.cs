@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OPGAVESTYRINGSSYSTEM;
 
@@ -10,9 +11,10 @@ using OPGAVESTYRINGSSYSTEM;
 namespace OPGAVESTYRINGSSYSTEM.Migrations
 {
     [DbContext(typeof(OpgaveStyringsDBContext))]
-    partial class OpgaveStyringsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20221013124137_ActualNewModelUpdate")]
+    partial class ActualNewModelUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
@@ -49,15 +51,13 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.TeamWorker", b =>
                 {
-                    b.Property<int?>("WorkerId")
+                    b.Property<int>("WorkerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("TeamId")
+                    b.Property<int>("TeamId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("WorkerId", "TeamId");
-
-                    b.HasIndex("TeamId");
 
                     b.ToTable("TeamWorkers");
                 });
@@ -100,23 +100,19 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
                     b.ToTable("Workers");
                 });
 
-            modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.TeamWorker", b =>
+            modelBuilder.Entity("TeamWorker", b =>
                 {
-                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Team", "Team")
-                        .WithMany("TeanWorkers")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("TeamId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Worker", "Worker")
-                        .WithMany("TeamWorker")
-                        .HasForeignKey("WorkerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("workersWorkerId")
+                        .HasColumnType("INTEGER");
 
-                    b.Navigation("Team");
+                    b.HasKey("TeamId", "workersWorkerId");
 
-                    b.Navigation("Worker");
+                    b.HasIndex("workersWorkerId");
+
+                    b.ToTable("TeamWorker");
                 });
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Todo", b =>
@@ -126,19 +122,24 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
                         .HasForeignKey("TaskId");
                 });
 
+            modelBuilder.Entity("TeamWorker", b =>
+                {
+                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Worker", null)
+                        .WithMany()
+                        .HasForeignKey("workersWorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Task", b =>
                 {
                     b.Navigation("Todos");
-                });
-
-            modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Team", b =>
-                {
-                    b.Navigation("TeanWorkers");
-                });
-
-            modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Worker", b =>
-                {
-                    b.Navigation("TeamWorker");
                 });
 #pragma warning restore 612, 618
         }

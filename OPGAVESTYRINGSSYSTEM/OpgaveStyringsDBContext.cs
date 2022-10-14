@@ -12,6 +12,9 @@ namespace OPGAVESTYRINGSSYSTEM
     {
         public DbSet<Model.Task> Tasks { get; set; }
         public DbSet<Todo> Todos { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<Worker> Workers { get; set; }
+        public DbSet<TeamWorker> TeamWorkers { get; set; }
 
         public string DbPath { get; }
 
@@ -24,5 +27,10 @@ namespace OPGAVESTYRINGSSYSTEM
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite($"Data Source={DbPath}");
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TeamWorker>().HasKey(p => new { p.WorkerId, p.TeamId });
+        }
     }
 }

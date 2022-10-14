@@ -1,27 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace OPGAVESTYRINGSSYSTEM.Model
 {
-    public class Todo
+    public class Team
     {
-        [Key]
-        public int TodoId { get; set; }
-
+        public int TeamId { get; set; }
         public string Name { get; set; }
-        public bool IsComplete { get; set; }
+        public List<TeamWorker> TeanWorkers { get; set; } = new List<TeamWorker>();
 
-        public Todo(string name, bool isComplete)
+        public Team(string name)
         {
             Name = name;
-            IsComplete = isComplete;
         }
 
-        public Todo()
+        public Team()
         {
         }
     }

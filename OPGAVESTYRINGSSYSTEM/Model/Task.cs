@@ -11,5 +11,18 @@ namespace OPGAVESTYRINGSSYSTEM.Model
     {
         [Key]
         public int TaskId { get; set; }
+
+        public string Name { get; set; }
+        public List<Todo> Todos { get; set; } = new List<Todo>();
+
+        public Task(string name, List<Todo> todos)
+        {
+            Name = name;
+            Todos = todos;
+        }
+
+        public Task()
+        {
+        }
     }
 }

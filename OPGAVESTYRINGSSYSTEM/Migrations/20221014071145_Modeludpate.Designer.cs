@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OPGAVESTYRINGSSYSTEM;
 
@@ -10,9 +11,10 @@ using OPGAVESTYRINGSSYSTEM;
 namespace OPGAVESTYRINGSSYSTEM.Migrations
 {
     [DbContext(typeof(OpgaveStyringsDBContext))]
-    partial class OpgaveStyringsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20221014071145_Modeludpate")]
+    partial class Modeludpate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.10");

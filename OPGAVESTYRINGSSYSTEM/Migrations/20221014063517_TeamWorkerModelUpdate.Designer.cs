@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OPGAVESTYRINGSSYSTEM;
 
@@ -10,9 +11,10 @@ using OPGAVESTYRINGSSYSTEM;
 namespace OPGAVESTYRINGSSYSTEM.Migrations
 {
     [DbContext(typeof(OpgaveStyringsDBContext))]
-    partial class OpgaveStyringsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20221014063517_TeamWorkerModelUpdate")]
+    partial class TeamWorkerModelUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
@@ -108,7 +110,7 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Worker", "Worker")
+                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Worker", "worker")
                         .WithMany("TeamWorker")
                         .HasForeignKey("WorkerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -116,7 +118,7 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
 
                     b.Navigation("Team");
 
-                    b.Navigation("Worker");
+                    b.Navigation("worker");
                 });
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Todo", b =>
