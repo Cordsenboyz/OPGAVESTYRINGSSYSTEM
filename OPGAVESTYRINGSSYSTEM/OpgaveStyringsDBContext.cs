@@ -31,6 +31,8 @@ namespace OPGAVESTYRINGSSYSTEM
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TeamWorker>().HasKey(p => new { p.WorkerId, p.TeamId });
+            modelBuilder.Entity<Team>().HasOne(x => x.CurrentTask);
+            modelBuilder.Entity<Worker>().HasOne(x => x.CurrentTodo);
         }
     }
 }

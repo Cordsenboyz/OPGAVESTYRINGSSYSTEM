@@ -11,8 +11,8 @@ using OPGAVESTYRINGSSYSTEM;
 namespace OPGAVESTYRINGSSYSTEM.Migrations
 {
     [DbContext(typeof(OpgaveStyringsDBContext))]
-    [Migration("20221014063517_TeamWorkerModelUpdate")]
-    partial class TeamWorkerModelUpdate
+    [Migration("20221014085543_initialCreate")]
+    partial class initialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,12 +21,11 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Task", b =>
                 {
-                    b.Property<int>("TaskId")
+                    b.Property<int?>("TaskId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("TaskId");
@@ -36,15 +35,19 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Team", b =>
                 {
-                    b.Property<int>("TeamId")
+                    b.Property<int?>("TeamId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("CurrentTaskTaskId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("TeamId");
+
+                    b.HasIndex("CurrentTaskTaskId");
 
                     b.ToTable("Teams");
                 });
@@ -66,15 +69,14 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Todo", b =>
                 {
-                    b.Property<int>("TodoId")
+                    b.Property<int?>("TodoId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsComplete")
+                    b.Property<bool?>("IsComplete")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("TaskId")
@@ -89,17 +91,30 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Worker", b =>
                 {
-                    b.Property<int>("WorkerId")
+                    b.Property<int?>("WorkerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("CurrentTodoTodoId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("WorkerId");
 
+                    b.HasIndex("CurrentTodoTodoId");
+
                     b.ToTable("Workers");
+                });
+
+            modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Team", b =>
+                {
+                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Task", "CurrentTask")
+                        .WithMany()
+                        .HasForeignKey("CurrentTaskTaskId");
+
+                    b.Navigation("CurrentTask");
                 });
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.TeamWorker", b =>
@@ -110,7 +125,7 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Worker", "worker")
+                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Worker", "Worker")
                         .WithMany("TeamWorker")
                         .HasForeignKey("WorkerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -118,7 +133,7 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
 
                     b.Navigation("Team");
 
-                    b.Navigation("worker");
+                    b.Navigation("Worker");
                 });
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Todo", b =>
@@ -126,6 +141,15 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
                     b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Task", null)
                         .WithMany("Todos")
                         .HasForeignKey("TaskId");
+                });
+
+            modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Worker", b =>
+                {
+                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Todo", "CurrentTodo")
+                        .WithMany()
+                        .HasForeignKey("CurrentTodoTodoId");
+
+                    b.Navigation("CurrentTodo");
                 });
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Task", b =>

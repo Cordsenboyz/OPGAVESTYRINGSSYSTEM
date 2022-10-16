@@ -10,10 +10,10 @@ namespace OPGAVESTYRINGSSYSTEM.Model
     public class Todo
     {
         [Key]
-        public int TodoId { get; set; }
+        public int? TodoId { get; set; }
 
-        public string Name { get; set; }
-        public bool IsComplete { get; set; }
+        public string? Name { get; set; }
+        public bool? IsComplete { get; set; }
 
         public Todo(string name, bool isComplete)
         {

@@ -19,30 +19,38 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Task", b =>
                 {
-                    b.Property<int>("TaskId")
+                    b.Property<int?>("TaskId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("TaskId");
+
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Team", b =>
                 {
-                    b.Property<int>("TeamId")
+                    b.Property<int?>("TeamId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("CurrentTaskTaskId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("TeamId");
+
+                    b.HasIndex("CurrentTaskTaskId");
 
                     b.ToTable("Teams");
                 });
@@ -64,40 +72,64 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Todo", b =>
                 {
-                    b.Property<int>("TodoId")
+                    b.Property<int?>("TodoId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsComplete")
+                    b.Property<bool?>("IsComplete")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("TaskId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("WorkerId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("TodoId");
 
                     b.HasIndex("TaskId");
 
+                    b.HasIndex("WorkerId");
+
                     b.ToTable("Todos");
                 });
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Worker", b =>
                 {
-                    b.Property<int>("WorkerId")
+                    b.Property<int?>("WorkerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("CurrentTodoTodoId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("WorkerId");
 
+                    b.HasIndex("CurrentTodoTodoId");
+
                     b.ToTable("Workers");
+                });
+
+            modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Task", b =>
+                {
+                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Team", null)
+                        .WithMany("Tasks")
+                        .HasForeignKey("TeamId");
+                });
+
+            modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Team", b =>
+                {
+                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Task", "CurrentTask")
+                        .WithMany()
+                        .HasForeignKey("CurrentTaskTaskId");
+
+                    b.Navigation("CurrentTask");
                 });
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.TeamWorker", b =>
@@ -124,6 +156,19 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
                     b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Task", null)
                         .WithMany("Todos")
                         .HasForeignKey("TaskId");
+
+                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Worker", null)
+                        .WithMany("Todos")
+                        .HasForeignKey("WorkerId");
+                });
+
+            modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Worker", b =>
+                {
+                    b.HasOne("OPGAVESTYRINGSSYSTEM.Model.Todo", "CurrentTodo")
+                        .WithMany()
+                        .HasForeignKey("CurrentTodoTodoId");
+
+                    b.Navigation("CurrentTodo");
                 });
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Task", b =>
@@ -133,12 +178,16 @@ namespace OPGAVESTYRINGSSYSTEM.Migrations
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Team", b =>
                 {
+                    b.Navigation("Tasks");
+
                     b.Navigation("TeanWorkers");
                 });
 
             modelBuilder.Entity("OPGAVESTYRINGSSYSTEM.Model.Worker", b =>
                 {
                     b.Navigation("TeamWorker");
+
+                    b.Navigation("Todos");
                 });
 #pragma warning restore 612, 618
         }
